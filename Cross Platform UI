@@ -1,0 +1,93 @@
+from abc import ABC, abstractmethod
+import platform
+
+# Abstract Product: Button
+class Button(ABC):
+    @abstractmethod
+    def render(self):
+        pass
+
+# Concrete Products: Windows, macOS, and Linux Buttons
+class WindowsButton(Button):
+    def render(self):
+        return "Rendering Windows Button"
+
+class MacOSButton(Button):
+    def render(self):
+        return "Rendering macOS Button"
+
+class LinuxButton(Button):
+    def render(self):
+        return "Rendering Linux Button"
+
+# Abstract Product: TextField
+class TextField(ABC):
+    @abstractmethod
+    def render(self):
+        pass
+
+# Concrete Products: Windows, macOS, and Linux TextFields
+class WindowsTextField(TextField):
+    def render(self):
+        return "Rendering Windows TextField"
+
+class MacOSTextField(TextField):
+    def render(self):
+        return "Rendering macOS TextField"
+
+class LinuxTextField(TextField):
+    def render(self):
+        return "Rendering Linux TextField"
+
+# Abstract Factory
+class UIFactory(ABC):
+    @abstractmethod
+    def create_button(self) -> Button:
+        pass
+
+    @abstractmethod
+    def create_text_field(self) -> TextField:
+        pass
+
+# Concrete Factories for each OS
+class WindowsUIFactory(UIFactory):
+    def create_button(self) -> Button:
+        return WindowsButton()
+    
+    def create_text_field(self) -> TextField:
+        return WindowsTextField()
+
+class MacOSUIFactory(UIFactory):
+    def create_button(self) -> Button:
+        return MacOSButton()
+    
+    def create_text_field(self) -> TextField:
+        return MacOSTextField()
+
+class LinuxUIFactory(UIFactory):
+    def create_button(self) -> Button:
+        return LinuxButton()
+    
+    def create_text_field(self) -> TextField:
+        return LinuxTextField()
+
+# Factory Creator Function
+def get_ui_factory() -> UIFactory:
+    os_name = platform.system()
+    if os_name == "Windows":
+        return WindowsUIFactory()
+    elif os_name == "Darwin":  # macOS
+        return MacOSUIFactory()
+    elif os_name == "Linux":
+        return LinuxUIFactory()
+    else:
+        raise ValueError("Unsupported OS")
+
+# Client Code
+if __name__ == "__main__":
+    factory = get_ui_factory()
+    button = factory.create_button()
+    text_field = factory.create_text_field()
+    
+    print(button.render())
+    print(text_field.render())
